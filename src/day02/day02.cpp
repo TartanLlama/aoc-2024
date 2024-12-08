@@ -8,6 +8,7 @@
 #include <tl/functional/curry.hpp>
 #include <tl/adjacent.hpp>
 #include <tl/adjacent_transform.hpp>
+#include <tl/functional/predicates.hpp>
 
 void part1() {
     std::ifstream input{ "C:/Users/Tarta/projects/aoc-2024/src/day02/input.txt" };
@@ -21,7 +22,7 @@ void part1() {
             auto distance = (chunk[1] - chunk[0]) * direction_mod;
             return distance > 0 and distance <= 3;
                 });
-        return std::ranges::all_of(valid_pairs, std::identity{});
+        return std::ranges::all_of(valid_pairs, tl::is_true);
             });
     std::cout << std::ranges::count(safeties, true);
 }
@@ -45,7 +46,7 @@ void part2() {
                 auto distance = (r - l) * direction_mod;
                 return distance > 0 and distance <= 3;
               });
-        return std::ranges::all_of(valid_pairs, std::identity{});
+        return std::ranges::all_of(valid_pairs, tl::is_true);
     };
 
     auto is_safe_with_tolerance = [&](auto&& levels) {
@@ -71,32 +72,3 @@ void part2() {
 int main() {
     part2();
 }
-
-/*
-1 2 1
-2 4 2
-4 7 3
-7 9 2
-9 8 -1
-
-2 4 2
-4 7 3
-7 9 2
-9 8 -1
-
-1 4 3
-4 7 3
-7 9 2
-9 8 -1
-
-1 2 1
-2 7 5
-
-1 2 1
-2 4 2
-4 9 5
-
-1 2 1
-2 4 2
-4 7 3
-7 8 1*/

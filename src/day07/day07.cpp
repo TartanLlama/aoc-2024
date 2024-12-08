@@ -12,23 +12,23 @@ void part1() {
     std::ifstream input{ "C:/Users/Tarta/projects/aoc-2024/src/day07/input.txt" };
     auto calibration_results = tl::views::getlines(input)
         | std::views::transform([](auto&& line) {
-        auto colon = line.find(':');
-        auto expected = std::stoull(line.substr(0, colon));
-        auto ns = tl::split<std::uint64_t>(line.substr(colon + 2), " ");
-        auto ops = std::array<std::uint64_t(*)(std::uint64_t, std::uint64_t), 2>{
-            [](std::uint64_t i, std::uint64_t j) { return i + j; },
-            [](std::uint64_t i, std::uint64_t j) { return i * j; }
-        };
-        auto possible = std::ranges::any_of(tl::views::k_combinations(ops, ns.size() - 1),
-            [&](auto&& ops) {
-                auto opit = ops.begin();
-                return tl::fold_left_first(ns,
-                    [=](std::uint64_t acc, std::uint64_t x) mutable {
-                        return (*opit++)(acc, x);
-                    }) == expected;
-            });
-        return possible ? expected : 0;
-            });
+            auto colon = line.find(':');
+            auto expected = std::stoull(line.substr(0, colon));
+            auto ns = tl::split<std::uint64_t>(line.substr(colon + 2), " ");
+            auto ops = std::array<std::uint64_t(*)(std::uint64_t, std::uint64_t), 2>{
+                [](std::uint64_t i, std::uint64_t j) { return i + j; },
+                [](std::uint64_t i, std::uint64_t j) { return i * j; }
+            };
+            auto possible = std::ranges::any_of(tl::views::k_combinations(ops, ns.size() - 1),
+                [&](auto&& ops) {
+                    auto opit = ops.begin();
+                    return tl::fold_left_first(ns,
+                        [=](std::uint64_t acc, std::uint64_t x) mutable {
+                            return (*opit++)(acc, x);
+                        }) == expected;
+                });
+            return possible ? expected : 0;
+        });
     std::cout <<
         tl::sum(calibration_results);
 }
