@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <array>
 #include <generator>
+#include <ranges>
+#include <tl/cartesian_product.hpp>
 
 namespace tl {
     class coord {
@@ -22,6 +24,12 @@ namespace tl {
         friend auto operator-(coord const& lhs, coord const& rhs) {
             return coord{ lhs.x_ - rhs.x_, lhs.y_ - rhs.y_ };
         }
+        friend auto operator+(coord const& lhs, int rhs) {
+            return coord{ lhs.x_ + rhs, lhs.y_ + rhs };
+        }
+        friend auto operator-(coord const& lhs, int rhs) {
+            return coord{ lhs.x_ - rhs, lhs.y_ - rhs };
+        }
         friend auto operator*(coord const& lhs, int rhs) {
             return coord{ lhs.x_ * rhs, lhs.y_ * rhs };
         }
@@ -33,9 +41,19 @@ namespace tl {
             y_ += rhs.y_;
             return *this;
         }
+        coord& operator+=(int rhs) {
+            x_ += rhs;
+            y_ += rhs;
+            return *this;
+        }
         coord& operator-=(coord const& rhs) {
             x_ -= rhs.x_;
             y_ -= rhs.y_;
+            return *this;
+        }
+        coord& operator-=(int rhs) {
+            x_ -= rhs;
+            y_ -= rhs;
             return *this;
         }
 
@@ -47,12 +65,13 @@ namespace tl {
             return { static_cast<std::size_t>(x_), static_cast<std::size_t>(y_) };
         }
 
-        static std::generator<coord> all_coords(int height, int width) {
-            for (auto i = 0; i < height; ++i) {
-                for (auto j = 0; j < width; ++j) {
-                    co_yield coord(i, j);
-                }
-            }
+        static auto all_coords(int height, int width) {
+            return tl::views::cartesian_product(
+                std::views::iota(0, height),
+                std::views::iota(0, width)
+            ) | std::views::transform([](auto&& p) {
+                return coord{ p.first, p.second };
+            });
         }
 
         coord up() const {
