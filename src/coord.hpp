@@ -71,7 +71,38 @@ namespace tl {
                 std::views::iota(0, width)
             ) | std::views::transform([](auto&& p) {
                 return coord{ p.first, p.second };
-            });
+                });
+        }
+
+        auto orthogonal_neighbours() const {
+            return std::array<coord, 4>{
+                coord{ x_ - 1, y_ },
+                    coord{ x_ + 1, y_ },
+                    coord{ x_, y_ - 1 },
+                    coord{ x_, y_ + 1 }
+            };
+        }
+
+        auto diagonal_neighbours() const {
+            return std::array<coord, 4>{
+                coord{ x_ - 1, y_ - 1 },
+                    coord{ x_ - 1, y_ + 1 },
+                    coord{ x_ + 1, y_ - 1 },
+                    coord{ x_ + 1, y_ + 1 }
+            };
+        }
+
+        auto all_neighbours() const {
+            return std::array<coord, 8>{
+                coord{ x_ - 1, y_ },
+                    coord{ x_ + 1, y_ },
+                    coord{ x_, y_ - 1 },
+                    coord{ x_, y_ + 1 },
+                    coord{ x_ - 1, y_ - 1 },
+                    coord{ x_ - 1, y_ + 1 },
+                    coord{ x_ + 1, y_ - 1 },
+                    coord{ x_ + 1, y_ + 1 }
+            };
         }
 
         coord up() const {

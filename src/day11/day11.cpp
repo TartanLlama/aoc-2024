@@ -4,9 +4,11 @@
 #include "../split.hpp"
 #include <tl/fold.hpp>
 #include <cmath>
+#include <chrono>
+#include "../unordered_dense.h"
 
 std::size_t count_stones(const std::string& line, std::size_t blinks) {
-    std::unordered_map<std::uint64_t, std::size_t> cache;
+    ankerl::unordered_dense::map<std::uint64_t, std::size_t> cache;
     auto simulate_blinks = [&](this auto self, std::uint64_t n, std::uint8_t blinks) -> std::size_t {
         if (blinks == 0) {
             return 1;
@@ -30,9 +32,6 @@ std::size_t count_stones(const std::string& line, std::size_t blinks) {
     return tl::sum(counts);
 }
 
-void part2() {
-
-}
 
 int main() {
     std::ifstream input{ "C:/Users/Tarta/projects/aoc-2024/src/day11/input.txt" };
@@ -40,5 +39,8 @@ int main() {
     std::getline(input, line);
     
     std::cout << count_stones(line,25) << '\n';
+    auto start = std::chrono::high_resolution_clock::now();
     std::cout << count_stones(line,75) << '\n';
+    auto end = std::chrono::high_resolution_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms\n";
 }
